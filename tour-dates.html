@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tour Dates - The Dolls World Tour 2025</title>
+    <meta
+      name="description"
+      content="The Dolls World Tour 2025 dates and venues. Find tickets for upcoming concerts near you."
+    />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=Bebas+Neue&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Core Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://unpkg.com/splitting@1.0.6/dist/splitting.js"></script>
+    <link
+      href="https://unpkg.com/splitting@1.0.6/dist/splitting.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --primary-black: #1a1a1a;
+        --pure-white: #ffffff;
+        --electric-crimson: #dc2626;
+        --warm-gold: #f59e0b;
+        --steel-gray: #6b7280;
+        --deep-slate: #374151;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--primary-black);
+        color: var(--pure-white);
+        overflow-x: hidden;
+      }
+
+      /* Navigation */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: rgba(26, 26, 26, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+      }
+
+      .nav-link {
+        position: relative;
+        transition: all 0.3s ease;
+      }
+
+      .nav-link:hover {
+        color: var(--electric-crimson);
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--electric-crimson);
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      /* Page Header */
+      .page-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)),
+          url("resources/hero-concert.jpg");
+        background-size: cover;
+        background-position: center;
+        padding: 8rem 0 4rem;
+        text-align: center;
+      }
+
+      .page-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 900;
+        background: linear-gradient(
+          45deg,
+          var(--electric-crimson),
+          var(--warm-gold)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+      }
+
+      /* Calendar Styles */
+      .calendar-container {
+        background: rgba(55, 65, 81, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 2rem;
+        border: 1px solid rgba(220, 38, 38, 0.2);
+        margin-bottom: 2rem;
+      }
+
+      .calendar-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .calendar-nav {
+        background: var(--electric-crimson);
+        border: none;
+        color: var(--pure-white);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      .calendar-nav:hover {
+        background: #b91c1c;
+        transform: scale(1.1);
+      }
+
+      .calendar-title {
+        font-family: "Bebas Neue", cursive;
+        font-size: 2rem;
+        color: var(--pure-white);
+        flex: 1;
+        text-align: center;
+      }
+
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .calendar-day {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(55, 65, 81, 0.8);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+      }
+
+      .calendar-day:hover {
+        background: rgba(220, 38, 38, 0.3);
+      }
+
+      .calendar-day.other-month {
+        color: var(--steel-gray);
+        background: rgba(55, 65, 81, 0.4);
+      }
+
+      .calendar-day.tour-date {
+        background: var(--electric-crimson);
+        color: var(--pure-white);
+        font-weight: bold;
+      }
+
+      .calendar-day.tour-date:hover {
+        background: #b91c1c;
+        transform: scale(1.1);
+      }
+
+      .calendar-weekday {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--deep-slate);
+        font-weight: bold;
+        color: var(--warm-gold);
+        font-size: 0.9rem;
+      }
+
+      /* Venue Cards */
+      .venue-card {
+        background: rgba(55, 65, 81, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        overflow: hidden;
+        border: 1px solid rgba(220, 38, 38, 0.2);
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .venue-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border-color: var(--electric-crimson);
+      }
+
+      .venue-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .venue-info {
+        padding: 1.5rem;
+      }
+
+      .venue-name {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: var(--pure-white);
+      }
+
+      .venue-location {
+        color: var(--steel-gray);
+        margin-bottom: 1rem;
+      }
+
+      .venue-date {
+        color: var(--electric-crimson);
+        font-weight: bold;
+        font-family: "Bebas Neue", cursive;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+
+      /* Buttons */
+      .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: none;
+        font-size: 0.9rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-primary {
+        background: var(--electric-crimson);
+        color: var(--pure-white);
+      }
+
+      .btn-primary:hover {
+        background: #b91c1c;
+        box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: var(--pure-white);
+        border: 2px solid var(--pure-white);
+      }
+
+      .btn-secondary:hover {
+        background: var(--pure-white);
+        color: var(--primary-black);
+      }
+
+      /* Modal */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background: var(--deep-slate);
+        border-radius: 15px;
+        padding: 2rem;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        color: var(--pure-white);
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      .booking-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+
+      .form-group input,
+      .form-group select {
+        padding: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        background: rgba(55, 65, 81, 0.8);
+        color: var(--pure-white);
+        font-size: 1rem;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: var(--electric-crimson);
+      }
+
+      /* Animations */
+      .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      /* Footer */
+      .footer {
+        background: var(--deep-slate);
+        padding: 3rem 0 2rem;
+        margin-top: 4rem;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .footer-bottom {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--steel-gray);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .calendar-grid {
+          gap: 1px;
+        }
+
+        .calendar-day {
+          font-size: 0.9rem;
+        }
+
+        .venue-info {
+          padding: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <h1
+              class="text-2xl font-bold"
+              style="font-family: 'Playfair Display', serif"
+            >
+              THE DOLLS
+            </h1>
+          </div>
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-8">
+              <a
+                href="index.html"
+                class="nav-link text-white hover:text-red-400 px-3 py-2 text-sm font-medium"
+                >Home</a
+              >
+              <a
+                href="tour-dates.html"
+                class="nav-link text-red-400 px-3 py-2 text-sm font-medium"
+                >Tour Dates</a
+              >
+              <a
+                href="band.html"
+                class="nav-link text-white hover:text-red-400 px-3 py-2 text-sm font-medium"
+                >Band</a
+              >
+              <a
+                href="merchandise.html"
+                class="nav-link text-white hover:text-red-400 px-3 py-2 text-sm font-medium"
+                >Store</a
+              >
+            </div>
+          </div>
+          <div class="md:hidden">
+            <button class="mobile-menu-btn text-white">
+              <svg
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mobile-menu hidden md:hidden">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-900">
+          <a
+            href="index.html"
+            class="text-white block px-3 py-2 text-base font-medium"
+            >Home</a
+          >
+          <a
+            href="tour-dates.html"
+            class="text-red-400 block px-3 py-2 text-base font-medium"
+            >Tour Dates</a
+          >
+          <a
+            href="band.html"
+            class="text-white block px-3 py-2 text-base font-medium"
+            >Band</a
+          >
+          <a
+            href="merchandise.html"
+            class="text-white block px-3 py-2 text-base font-medium"
+            >Store</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="page-title">WORLD TOUR 2025</h1>
+        <p class="text-xl text-gray-300">Catch The Dolls live in concert</p>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main style="padding-top: 2rem">
+      <!-- Interactive Calendar -->
+      <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div class="text-center mb-8 animate-on-scroll">
+          <h2
+            class="text-3xl font-bold mb-4"
+            style="font-family: 'Playfair Display', serif"
+          >
+            Tour Calendar
+          </h2>
+          <p class="text-lg text-gray-400">
+            Click on highlighted dates for venue information
+          </p>
+        </div>
+
+        <div class="calendar-container animate-on-scroll">
+          <div class="calendar-header">
+            <button class="calendar-nav calendar-prev">‹</button>
+            <h3 class="calendar-title">November 2025</h3>
+            <button class="calendar-nav calendar-next">›</button>
+          </div>
+
+          <div class="calendar-grid">
+            <!-- Weekdays -->
+            <div class="calendar-weekday">Sun</div>
+            <div class="calendar-weekday">Mon</div>
+            <div class="calendar-weekday">Tue</div>
+            <div class="calendar-weekday">Wed</div>
+            <div class="calendar-weekday">Thu</div>
+            <div class="calendar-weekday">Fri</div>
+            <div class="calendar-weekday">Sat</div>
+
+            <!-- Calendar days will be generated by JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Tour Venues -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div class="text-center mb-12 animate-on-scroll">
+          <h2
+            class="text-3xl font-bold mb-4"
+            style="font-family: 'Playfair Display', serif"
+          >
+            Tour Venues
+          </h2>
+          <p class="text-lg text-gray-400">
+            Select a venue to see details and book tickets
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="venue-card animate-on-scroll">
+            <img
+              src="resources/venue-1.jpg"
+              alt="BT Arena"
+              class="venue-image"
+            />
+            <div class="venue-info">
+              <h3 class="venue-name">BT Arena</h3>
+              <p class="venue-location">Cluj-Napoca, Romania</p>
+              <p class="venue-date">November 10, 2025</p>
+              <p class="text-sm text-gray-400 mb-4">
+                The largest indoor arena in Romania. Capacity: 10,000
+              </p>
+              <button class="btn btn-primary book-tickets">Book Tickets</button>
+            </div>
+          </div>
+
+          <div class="venue-card animate-on-scroll">
+            <img
+              src="resources/venue-2.jpg"
+              alt="Sala Polivalentă"
+              class="venue-image"
+            />
+            <div class="venue-info">
+              <h3 class="venue-name">Sala Polivalentă</h3>
+              <p class="venue-location">Bucharest, Romania</p>
+              <p class="venue-date">November 13, 2025</p>
+              <p class="text-sm text-gray-400 mb-4">
+                The main multi-purpose hall in Bucharest. Capacity: 20,000
+              </p>
+              <button class="btn btn-primary book-tickets">Book Tickets</button>
+            </div>
+          </div>
+
+          <div class="venue-card animate-on-scroll">
+            <img
+              src="resources/venue-3.jpg"
+              alt="Tokyo Dome"
+              class="venue-image"
+            />
+            <div class="venue-info">
+              <h3 class="venue-name">Tokyo Dome</h3>
+              <p class="venue-location">Tokyo, Japan</p>
+              <p class="venue-date">November 20, 2025</p>
+              <p class="text-sm text-gray-400 mb-4">
+                Iconic stadium in Tokyo. Capacity: 55,000
+              </p>
+              <button class="btn btn-primary book-tickets">Book Tickets</button>
+            </div>
+          </div>
+
+          <div class="venue-card animate-on-scroll">
+            <img
+              src="resources/venue-4.jpg"
+              alt="Madison Square Garden"
+              class="venue-image"
+            />
+            <div class="venue-info">
+              <h3 class="venue-name">Madison Square Garden</h3>
+              <p class="venue-location">New York, NY</p>
+              <p class="venue-date">November 27, 2025</p>
+              <p class="text-sm text-gray-400 mb-4">
+                The world's most famous arena. Capacity: 20,789
+              </p>
+              <button class="btn btn-primary book-tickets">Book Tickets</button>
+            </div>
+          </div>
+
+          <div class="venue-card animate-on-scroll">
+            <img
+              src="resources/venue-5.jpg"
+              alt="The Forum"
+              class="venue-image"
+            />
+            <div class="venue-info">
+              <h3 class="venue-name">The Forum</h3>
+              <p class="venue-location">Los Angeles, CA</p>
+              <p class="venue-date">November 31, 2025</p>
+              <p class="text-sm text-gray-400 mb-4">
+                Legendary concert venue. Capacity: 17,505
+              </p>
+              <button class="btn btn-primary book-tickets">Book Tickets</button>
+            </div>
+          </div>
+          <div class="venue-card animate-on-scroll">
+            <img
+              src="resources/venue-6.jpg"
+              alt="More Dates Coming"
+              class="venue-image"
+            />
+            <div class="venue-info">
+              <h3 class="venue-name">More Dates Coming</h3>
+              <p class="venue-location">TBA</p>
+              <p class="venue-date">December 2025</p>
+              <p class="text-sm text-gray-400 mb-4">
+                Additional tour dates to be announced
+              </p>
+              <button class="btn btn-secondary">Notify Me</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tour Statistics -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div class="text-center mb-12 animate-on-scroll">
+          <h2
+            class="text-3xl font-bold mb-4"
+            style="font-family: 'Playfair Display', serif"
+          >
+            Tour Stats
+          </h2>
+          <p class="text-lg text-gray-400">World Tour 2025 by the numbers</p>
+        </div>
+
+        <div class="grid md:grid-cols-4 gap-8">
+          <div class="text-center animate-on-scroll">
+            <div
+              style="
+                background: rgba(220, 38, 38, 0.1);
+                border-radius: 15px;
+                padding: 2rem;
+                border: 1px solid rgba(220, 38, 38, 0.2);
+              "
+            >
+              <h3
+                class="text-4xl font-bold mb-2"
+                style="
+                  color: var(--electric-crimson);
+                  font-family: 'Bebas Neue', cursive;
+                "
+              >
+                25
+              </h3>
+              <p class="text-gray-400">Cities</p>
+            </div>
+          </div>
+
+          <div class="text-center animate-on-scroll">
+            <div
+              style="
+                background: rgba(245, 158, 11, 0.1);
+                border-radius: 15px;
+                padding: 2rem;
+                border: 1px solid rgba(245, 158, 11, 0.2);
+              "
+            >
+              <h3
+                class="text-4xl font-bold mb-2"
+                style="
+                  color: var(--warm-gold);
+                  font-family: 'Bebas Neue', cursive;
+                "
+              >
+                50
+              </h3>
+              <p class="text-gray-400">Shows</p>
+            </div>
+          </div>
+
+          <div class="text-center animate-on-scroll">
+            <div
+              style="
+                background: rgba(220, 38, 38, 0.1);
+                border-radius: 15px;
+                padding: 2rem;
+                border: 1px solid rgba(220, 38, 38, 0.2);
+              "
+            >
+              <h3
+                class="text-4xl font-bold mb-2"
+                style="
+                  color: var(--electric-crimson);
+                  font-family: 'Bebas Neue', cursive;
+                "
+              >
+                1M+
+              </h3>
+              <p class="text-gray-400">Fans</p>
+            </div>
+          </div>
+
+          <div class="text-center animate-on-scroll">
+            <div
+              style="
+                background: rgba(245, 158, 11, 0.1);
+                border-radius: 15px;
+                padding: 2rem;
+                border: 1px solid rgba(245, 158, 11, 0.2);
+              "
+            >
+              <h3
+                class="text-4xl font-bold mb-2"
+                style="
+                  color: var(--warm-gold);
+                  font-family: 'Bebas Neue', cursive;
+                "
+              >
+                2025
+              </h3>
+              <p class="text-gray-400">Year</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Booking Modal -->
+    <div class="modal booking-modal">
+      <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <h3
+          class="text-2xl font-bold mb-4"
+          style="font-family: 'Playfair Display', serif"
+        >
+          Book Tickets
+        </h3>
+        <form class="booking-form">
+          <div class="form-group">
+            <label for="venue">Venue</label>
+            <select id="venue" name="venue" required>
+              <option value="">Select Venue</option>
+              <option value="cluj">BT Arena (Cluj-Napoca) - Oct 10</option>
+              <option value="bucharest">
+                Sala Polivalentă (Bucharest) - Oct 13
+              </option>
+              <option value="tokyo">Tokyo Dome (Tokyo) - Oct 20</option>
+              <option value="msg">
+                Madison Square Garden (New York) - Oct 27
+              </option>
+              <option value="forum">The Forum (Los Angeles) - Oct 31</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="tickets">Number of Tickets</label>
+            <select id="tickets" name="tickets" required>
+              <option value="">Select Quantity</option>
+              <option value="1">1 Ticket</option>
+              <option value="2">2 Tickets</option>
+              <option value="3">3 Tickets</option>
+              <option value="4">4 Tickets</option>
+              <option value="5">5 Tickets</option>
+              <option value="6">6 Tickets</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary booking-submit">
+            Book Tickets
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tour Date Info Modal -->
+    <div class="modal tour-date-modal">
+      <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <h3
+          class="text-2xl font-bold mb-4"
+          style="font-family: 'Playfair Display', serif"
+        >
+          Tour Date
+        </h3>
+        <p
+          class="modal-date text-lg mb-4"
+          style="
+            color: var(--electric-crimson);
+            font-family: 'Bebas Neue', cursive;
+          "
+        ></p>
+        <p class="text-gray-400 mb-4">
+          The Dolls live in concert. Don't miss this epic performance featuring
+          all your favorite hits from the "Electric Storm" album plus classic
+          fan favorites.
+        </p>
+        <button class="btn btn-primary book-tickets">Book Tickets Now</button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="footer-content">
+          <div>
+            <h3
+              class="text-xl font-bold mb-4"
+              style="font-family: 'Playfair Display', serif"
+            >
+              THE DOLLS
+            </h3>
+            <p class="text-gray-400">
+              Rock band bringing you the best in modern rock music. World Tour
+              2025 now booking.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="tour-dates.html" class="text-gray-400 hover:text-white"
+                  >Tour Dates</a
+                >
+              </li>
+              <li>
+                <a href="band.html" class="text-gray-400 hover:text-white"
+                  >Band Info</a
+                >
+              </li>
+              <li>
+                <a
+                  href="merchandise.html"
+                  class="text-gray-400 hover:text-white"
+                  >Merchandise</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Contact</h4>
+            <p class="text-gray-400">management@thedolls.com</p>
+            <p class="text-gray-400">Booking: +1 (555) 123-4567</p>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white">Instagram</a>
+              <a href="#" class="text-gray-400 hover:text-white">Twitter</a>
+              <a href="#" class="text-gray-400 hover:text-white">Facebook</a>
+              <a href="#" class="text-gray-400 hover:text-white">YouTube</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>&copy; 2025 The Dolls. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="main.js"></script>
+  </body>
+</html>

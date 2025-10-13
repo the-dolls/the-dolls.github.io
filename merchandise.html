@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Merchandise - The Dolls Official Store</title>
+    <meta
+      name="description"
+      content="Official The Dolls merchandise. T-shirts, hoodies, posters, vinyl records and more."
+    />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=Bebas+Neue&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Core Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://unpkg.com/splitting@1.0.6/dist/splitting.js"></script>
+    <link
+      href="https://unpkg.com/splitting@1.0.6/dist/splitting.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --primary-black: #1a1a1a;
+        --pure-white: #ffffff;
+        --electric-crimson: #dc2626;
+        --warm-gold: #f59e0b;
+        --steel-gray: #6b7280;
+        --deep-slate: #374151;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--primary-black);
+        color: var(--pure-white);
+        overflow-x: hidden;
+      }
+
+      /* Navigation */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: rgba(26, 26, 26, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+      }
+
+      .nav-link {
+        position: relative;
+        transition: all 0.3s ease;
+      }
+
+      .nav-link:hover {
+        color: var(--electric-crimson);
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--electric-crimson);
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      /* Cart Icon */
+      .cart-toggle {
+        position: relative;
+        background: var(--electric-crimson);
+        border: none;
+        color: var(--pure-white);
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .cart-toggle:hover {
+        background: #b91c1c;
+        transform: scale(1.05);
+      }
+
+      .cart-count {
+        background: var(--warm-gold);
+        color: var(--primary-black);
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: bold;
+      }
+
+      /* Cart Sidebar */
+      .cart-sidebar {
+        position: fixed;
+        top: 0;
+        right: -400px;
+        width: 400px;
+        height: 100vh;
+        background: var(--deep-slate);
+        z-index: 2000;
+        transition: right 0.3s ease;
+        overflow-y: auto;
+      }
+
+      .cart-sidebar.active {
+        right: 0;
+      }
+
+      .cart-header {
+        padding: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: between;
+        align-items: center;
+      }
+
+      .cart-close {
+        background: none;
+        border: none;
+        color: var(--pure-white);
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      .cart-items {
+        padding: 1rem;
+      }
+
+      .cart-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .cart-item-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      .cart-item-details {
+        flex: 1;
+      }
+
+      .cart-item-title {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+      }
+
+      .cart-item-price {
+        color: var(--electric-crimson);
+        font-weight: 600;
+      }
+
+      .remove-item {
+        background: none;
+        border: none;
+        color: var(--steel-gray);
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0.25rem;
+      }
+
+      .remove-item:hover {
+        color: var(--electric-crimson);
+      }
+
+      .cart-footer {
+        padding: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .cart-total {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-size: 1.25rem;
+        font-weight: bold;
+      }
+
+      /* Page Header */
+      .page-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)),
+          url("resources/merchandise-1.jpg");
+        background-size: cover;
+        background-position: center;
+        padding: 8rem 0 4rem;
+        text-align: center;
+      }
+
+      .page-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 900;
+        background: linear-gradient(
+          45deg,
+          var(--electric-crimson),
+          var(--warm-gold)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+      }
+
+      /* Filter Buttons */
+      .filter-container {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+      }
+
+      .filter-btn {
+        background: transparent;
+        border: 2px solid var(--steel-gray);
+        color: var(--steel-gray);
+        padding: 0.5rem 1.5rem;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+      }
+
+      .filter-btn:hover,
+      .filter-btn.active {
+        border-color: var(--electric-crimson);
+        color: var(--electric-crimson);
+        background: rgba(220, 38, 38, 0.1);
+      }
+
+      /* Product Cards */
+      .product-card {
+        background: rgba(55, 65, 81, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        overflow: hidden;
+        border: 1px solid rgba(220, 38, 38, 0.2);
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border-color: var(--electric-crimson);
+      }
+
+      .product-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        transition: all 0.3s ease;
+      }
+
+      .product-card:hover .product-image {
+        transform: scale(1.05);
+      }
+
+      .product-info {
+        padding: 1.5rem;
+      }
+
+      .product-name {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: var(--pure-white);
+      }
+
+      .product-description {
+        color: var(--steel-gray);
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+
+      .product-price {
+        color: var(--electric-crimson);
+        font-weight: bold;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+
+      .product-options {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .option-btn {
+        background: rgba(55, 65, 81, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--steel-gray);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.8rem;
+      }
+
+      .option-btn:hover,
+      .option-btn.selected {
+        border-color: var(--electric-crimson);
+        color: var(--electric-crimson);
+        background: rgba(220, 38, 38, 0.1);
+      }
+
+      /* Buttons */
+      .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: none;
+        font-size: 0.9rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-primary {
+        background: var(--electric-crimson);
+        color: var(--pure-white);
+        width: 100%;
+      }
+
+      .btn-primary:hover {
+        background: #b91c1c;
+        box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: var(--pure-white);
+        border: 2px solid var(--pure-white);
+      }
+
+      .btn-secondary:hover {
+        background: var(--pure-white);
+        color: var(--primary-black);
+      }
+
+      /* Cart Notification */
+      .cart-notification {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: var(--deep-slate);
+        border: 1px solid var(--electric-crimson);
+        border-radius: 10px;
+        padding: 1rem;
+        z-index: 1500;
+        transform: translateX(300px);
+        opacity: 0;
+      }
+
+      .notification-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .notification-content img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      /* Animations */
+      .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      /* Footer */
+      .footer {
+        background: var(--deep-slate);
+        padding: 3rem 0 2rem;
+        margin-top: 4rem;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .footer-bottom {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--steel-gray);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .cart-sidebar {
+          width: 100%;
+          right: -100%;
+        }
+
+        .filter-container {
+          justify-content: flex-start;
+        }
+
+        .product-image {
+          height: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <h1
+              class="text-2xl font-bold"
+              style="font-family: 'Playfair Display', serif"
+            >
+              THE DOLLS
+            </h1>
+          </div>
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-8">
+              <a
+                href="index.html"
+                class="nav-link text-white hover:text-red-400 px-3 py-2 text-sm font-medium"
+                >Home</a
+              >
+              <a
+                href="tour-dates.html"
+                class="nav-link text-white hover:text-red-400 px-3 py-2 text-sm font-medium"
+                >Tour Dates</a
+              >
+              <a
+                href="band.html"
+                class="nav-link text-white hover:text-red-400 px-3 py-2 text-sm font-medium"
+                >Band</a
+              >
+              <a
+                href="merchandise.html"
+                class="nav-link text-red-400 px-3 py-2 text-sm font-medium"
+                >Store</a
+              >
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <button class="cart-toggle">
+              🛒 Cart
+              <span class="cart-count">0</span>
+            </button>
+            <div class="md:hidden">
+              <button class="mobile-menu-btn text-white">
+                <svg
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mobile-menu hidden md:hidden">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-900">
+          <a
+            href="index.html"
+            class="text-white block px-3 py-2 text-base font-medium"
+            >Home</a
+          >
+          <a
+            href="tour-dates.html"
+            class="text-white block px-3 py-2 text-base font-medium"
+            >Tour Dates</a
+          >
+          <a
+            href="band.html"
+            class="text-white block px-3 py-2 text-base font-medium"
+            >Band</a
+          >
+          <a
+            href="merchandise.html"
+            class="text-red-400 block px-3 py-2 text-base font-medium"
+            >Store</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar">
+      <div class="cart-header">
+        <h3 class="text-xl font-bold">Shopping Cart</h3>
+        <button class="cart-close">&times;</button>
+      </div>
+
+      <div class="cart-items">
+        <!-- Cart items will be dynamically added here -->
+      </div>
+
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total:</span>
+          <span class="total-amount">$0.00</span>
+        </div>
+        <button class="btn btn-primary" style="width: 100%">Checkout</button>
+      </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="page-title">OFFICIAL STORE</h1>
+        <p class="text-xl text-gray-300">Get your The Dolls gear</p>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main style="padding-top: 2rem">
+      <!-- Store Banner -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div class="text-center mb-8 animate-on-scroll">
+          <h2
+            class="text-3xl font-bold mb-4"
+            style="font-family: 'Playfair Display', serif"
+          >
+            Upcoming Tour Dates
+          </h2>
+          <p class="text-lg text-gray-400">
+            Cluj-Napoca, Bucharest, Tokyo, New York, Los Angeles <br />
+            <span style="color: var(--warm-gold)"
+              >More Dates Coming in December!</span
+            >
+          </p>
+        </div>
+        <div class="text-center animate-on-scroll">
+          <img
+            src="resources/concert-poster.jpg"
+            alt="The Dolls Store Banner"
+            class="w-full h-64 object-cover rounded-lg mb-8"
+          />
+          <h2
+            class="text-3xl font-bold mb-4"
+            style="font-family: 'Playfair Display', serif"
+          >
+            Official Merchandise
+          </h2>
+          <p class="text-lg text-gray-400 max-w-2xl mx-auto">
+            Show your love for The Dolls with our exclusive merchandise
+            collection. From t-shirts to vinyl records, we have everything you
+            need to rock out in style.
+          </p>
+        </div>
+      </section>
+
+      <!-- Product Filters -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <div class="filter-container animate-on-scroll">
+          <button class="filter-btn active" data-filter="all">
+            All Products
+          </button>
+          <button class="filter-btn" data-filter="apparel">Apparel</button>
+          <button class="filter-btn" data-filter="music">Music</button>
+          <button class="filter-btn" data-filter="accessories">
+            Accessories
+          </button>
+          <button class="filter-btn" data-filter="posters">Posters</button>
+        </div>
+      </section>
+
+      <!-- Product Grid -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- T-Shirt -->
+          <div class="product-card animate-on-scroll" data-category="apparel">
+            <img
+              src="resources/merchandise-1.jpg"
+              alt="The Dolls T-Shirt"
+              class="product-image"
+            />
+            <div class="product-info">
+              <h3 class="product-name">The Dolls T-Shirt</h3>
+              <p class="product-description">
+                Premium cotton t-shirt with the official The Dolls logo. Perfect
+                for concerts and everyday wear.
+              </p>
+              <p class="product-price">$29.99</p>
+
+              <div class="product-options">
+                <button class="option-btn selected">S</button>
+                <button class="option-btn">M</button>
+                <button class="option-btn">L</button>
+                <button class="option-btn">XL</button>
+                <button class="option-btn">XXL</button>
+              </div>
+
+              <button class="btn btn-primary add-to-cart">Add to Cart</button>
+            </div>
+          </div>
+
+          <!-- Hoodie -->
+          <div class="product-card animate-on-scroll" data-category="apparel">
+            <img
+              src="resources/merchandise-2.jpg"
+              alt="The Dolls Hoodie"
+              class="product-image"
+            />
+            <div class="product-info">
+              <h3 class="product-name">Electric Storm Hoodie</h3>
+              <p class="product-description">
+                Comfortable hoodie featuring the Electric Storm album artwork.
+                Perfect for staying warm at concerts.
+              </p>
+              <p class="product-price">$59.99</p>
+
+              <div class="product-options">
+                <button class="option-btn">S</button>
+                <button class="option-btn selected">M</button>
+                <button class="option-btn">L</button>
+                <button class="option-btn">XL</button>
+              </div>
+
+              <button class="btn btn-primary add-to-cart">Add to Cart</button>
+            </div>
+          </div>
+
+          <!-- Tour Poster -->
+          <div class="product-card animate-on-scroll" data-category="posters">
+            <img
+              src="resources/merchandise-3.jpg"
+              alt="World Tour 2025 Poster"
+              class="product-image"
+            />
+            <div class="product-info">
+              <h3 class="product-name">World Tour 2025 Poster</h3>
+              <p class="product-description">
+                Limited edition tour poster featuring all tour dates and venues.
+                Perfect for framing and display.
+              </p>
+              <p class="product-price">$19.99</p>
+
+              <div class="product-options">
+                <button class="option-btn selected">18x24</button>
+                <button class="option-btn">24x36</button>
+              </div>
+
+              <button class="btn btn-primary add-to-cart">Add to Cart</button>
+            </div>
+          </div>
+
+          <!-- Vinyl Record -->
+          <div class="product-card animate-on-scroll" data-category="music">
+            <img
+              src="resources/merchandise-4.jpg"
+              alt="Electric Storm Vinyl"
+              class="product-image"
+            />
+            <div class="product-info">
+              <h3 class="product-name">Electric Storm Vinyl</h3>
+              <p class="product-description">
+                Limited edition 180g vinyl pressing of the latest album.
+                Includes exclusive artwork and liner notes.
+              </p>
+              <p class="product-price">$34.99</p>
+
+              <div class="product-options">
+                <button class="option-btn selected">Black Vinyl</button>
+                <button class="option-btn">Red Vinyl</button>
+              </div>
+
+              <button class="btn btn-primary add-to-cart">Add to Cart</button>
+            </div>
+          </div>
+
+          <!-- Additional Products -->
+          <div
+            class="product-card animate-on-scroll"
+            data-category="accessories"
+          >
+            <img
+              src="resources/equipment.jpg"
+              alt="The Dolls Cap"
+              class="product-image"
+            />
+            <div class="product-info">
+              <h3 class="product-name">The Dolls Cap</h3>
+              <p class="product-description">
+                Adjustable cap with embroidered The Dolls logo. Perfect for
+                outdoor concerts and festivals.
+              </p>
+              <p class="product-price">$24.99</p>
+
+              <div class="product-options">
+                <button class="option-btn selected">Black</button>
+                <button class="option-btn">Navy</button>
+                <button class="option-btn">Red</button>
+              </div>
+
+              <button class="btn btn-primary add-to-cart">Add to Cart</button>
+            </div>
+          </div>
+
+          <div
+            <!-- Tour Venue Cards for Consistency -->
+            <div class="product-card animate-on-scroll" data-category="tour">
+              <img src="resources/venue-1.jpg" alt="Cluj-Napoca Venue" class="product-image" />
+              <div class="product-info">
+                <h3 class="product-name">Cluj-Napoca</h3>
+                <p class="product-description">Live at Cluj-Napoca - November</p>
+                <p class="product-price">See Tour Dates</p>
+              </div>
+            </div>
+            <div class="product-card animate-on-scroll" data-category="tour">
+              <img src="resources/venue-2.jpg" alt="Bucharest Venue" class="product-image" />
+              <div class="product-info">
+                <h3 class="product-name">Bucharest</h3>
+                <p class="product-description">Live at Bucharest - November</p>
+                <p class="product-price">See Tour Dates</p>
+              </div>
+            </div>
+            <div class="product-card animate-on-scroll" data-category="tour">
+              <img src="resources/venue-3.jpg" alt="Tokyo Venue" class="product-image" />
+              <div class="product-info">
+                <h3 class="product-name">Tokyo</h3>
+                <p class="product-description">Live at Tokyo - November</p>
+                <p class="product-price">See Tour Dates</p>
+              </div>
+            </div>
+            <div class="product-card animate-on-scroll" data-category="tour">
+              <img src="resources/venue-4.jpg" alt="New York Venue" class="product-image" />
+              <div class="product-info">
+                <h3 class="product-name">New York</h3>
+                <p class="product-description">Live at New York - November</p>
+                <p class="product-price">See Tour Dates</p>
+              </div>
+            </div>
+            <div class="product-card animate-on-scroll" data-category="tour">
+              <img src="resources/venue-5.jpg" alt="Los Angeles Venue" class="product-image" />
+              <div class="product-info">
+                <h3 class="product-name">Los Angeles</h3>
+                <p class="product-description">Live at Los Angeles - November</p>
+                <p class="product-price">See Tour Dates</p>
+              </div>
+            </div>
+            <div class="product-card animate-on-scroll" data-category="tour">
+              <img src="resources/venue-6.jpg" alt="More Dates Coming" class="product-image" />
+              <div class="product-info">
+                <h3 class="product-name">More Dates Coming</h3>
+                <p class="product-description">More Dates Coming in December!</p>
+                <p class="product-price">See Tour Dates</p>
+              </div>
+            </div>
+        </div>
+      </section>
+
+      <!-- Featured Products -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div class="text-center mb-12 animate-on-scroll">
+          <h2
+            class="text-3xl font-bold mb-4"
+            style="font-family: 'Playfair Display', serif"
+          >
+            Best Sellers
+          </h2>
+          <p class="text-lg text-gray-400">
+            Our most popular merchandise items
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="product-card animate-on-scroll" data-category="apparel">
+            <img
+              src="resources/merchandise-1.jpg"
+              alt="Classic Logo T-Shirt"
+              class="product-image"
+            />
+            <div class="product-info">
+              <h3 class="product-name">Classic Logo T-Shirt</h3>
+              <p class="product-description">
+                The original The Dolls logo t-shirt. Our best-selling item and a
+                fan favorite.
+              </p>
+              <p class="product-price">$29.99</p>
+              <div class="product-options">
+                <button class="option-btn selected">M</button>
+                <button class="option-btn">L</button>
+                <button class="option-btn">XL</button>
+              </div>
+              <button class="btn btn-primary add-to-cart">Add to Cart</button>
+            </div>
+          </div>
+
+          <div class="product-card animate-on-scroll" data-category="music">
+            <img
+              src="resources/merchandise-4.jpg"
+              alt="Electric Storm Vinyl"
+              class="product-image"
+            />
+            <div class="product-info">
+              <h3 class="product-name">Electric Storm Vinyl</h3>
+              <p class="product-description">
+                Our latest album on premium vinyl. Limited edition with
+                exclusive artwork.
+              </p>
+              <p class="product-price">$34.99</p>
+              <div class="product-options">
+                <button class="option-btn selected">Black Vinyl</button>
+                <button class="option-btn">Red Vinyl</button>
+              </div>
+              <button class="btn btn-primary add-to-cart">Add to Cart</button>
+            </div>
+          </div>
+
+          <div class="product-card animate-on-scroll" data-category="posters">
+            <img
+              src="resources/merchandise-3.jpg"
+              alt="Tour Poster Bundle"
+              class="product-image"
+            />
+            <div class="product-info">
+              <h3 class="product-name">Tour Poster Bundle</h3>
+              <p class="product-description">
+                Complete set of all tour posters from 2023-2025. Perfect for
+                collectors.
+              </p>
+              <p class="product-price">$49.99</p>
+              <div class="product-options">
+                <button class="option-btn selected">18x24 Set</button>
+              </div>
+              <button class="btn btn-primary add-to-cart">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="footer-content">
+          <div>
+            <h3
+              class="text-xl font-bold mb-4"
+              style="font-family: 'Playfair Display', serif"
+            >
+              THE DOLLS
+            </h3>
+            <p class="text-gray-400">
+              Rock band bringing you the best in modern rock music. World Tour
+              2025 now booking.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="tour-dates.html" class="text-gray-400 hover:text-white"
+                  >Tour Dates</a
+                >
+              </li>
+              <li>
+                <a href="band.html" class="text-gray-400 hover:text-white"
+                  >Band Info</a
+                >
+              </li>
+              <li>
+                <a
+                  href="merchandise.html"
+                  class="text-gray-400 hover:text-white"
+                  >Merchandise</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Contact</h4>
+            <p class="text-gray-400">management@thedolls.com</p>
+            <p class="text-gray-400">Booking: +1 (555) 123-4567</p>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white">Instagram</a>
+              <a href="#" class="text-gray-400 hover:text-white">Twitter</a>
+              <a href="#" class="text-gray-400 hover:text-white">Facebook</a>
+              <a href="#" class="text-gray-400 hover:text-white">YouTube</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>&copy; 2025 The Dolls. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="main.js"></script>
+  </body>
+</html>
